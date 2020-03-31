@@ -172,4 +172,8 @@ extern "C" __declspec(dllexport) void registerHooks(il2cpp_binding &bindingCtx) 
 			colors.emplace_back(std::make_pair(p["cutoff"], Color(h)));
 		}
 	}
+
+	std::sort(colors.begin(), colors.end(), [](const std::pair<float, Color> &lhs, const std::pair<float, Color> &rhs) {
+		return lhs.first < rhs.first;
+	});
 }
