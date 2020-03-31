@@ -37,6 +37,7 @@ std::vector<std::pair<float, Color>> colors;
 
 extern "C" __declspec(dllexport) void registerHooks(il2cpp_binding &bindingCtx) {
 
+	//Hook when we hit a target, so we know what high score to look for
 	bindingCtx.bindClassFunction("", "Target", "CompleteTarget", InvokeTime::Before, [](const MethodInvocationContext& ctx, ThisPtr ths) -> void {
 		nextPopupIsScore = true;
 
@@ -62,7 +63,7 @@ extern "C" __declspec(dllexport) void registerHooks(il2cpp_binding &bindingCtx) 
 		
 	});
 
-	//Chain targets require the trigger be held down, otherwise they will fail. We hook that function and force the value to be true if we just hit a chain note.
+	//Hook after creating the text popup, so we can grab it and change its color
 	bindingCtx.bindClassFunction("", "TextPopupPool", "CreatePopup", InvokeTime::Before, [](const MethodInvocationContext& ctx, ThisPtr ths, Vector3 pos, Quat rot, Vector3 scale, internal::Il2CppString text, internal::Il2CppString extraText) -> void {
 		auto &&gtx = ctx.getGlobalContext();
 
