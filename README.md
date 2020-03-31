@@ -38,8 +38,8 @@ For example, the default config is: below 40% is red, between 40% and 70% is gre
 
 ## Building
 ```bash
-git clone https://github.com/Mettra/SampleAudicaMod.git
-cd SampleAudicaMod
+git clone https://github.com/Mettra/HitScoreVisualizerAudica.git
+cd HitScoreVisualizerAudica
 git submodule update --init --recursive
 ./build.bat
 ```
