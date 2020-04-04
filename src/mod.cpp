@@ -35,8 +35,7 @@ struct Color {
 
 std::vector<std::pair<float, Color>> colors;
 
-extern "C" __declspec(dllexport) void registerHooks(il2cpp_binding &bindingCtx) {
-
+extern "C" __declspec(dllexport) ModDeclaration registerHooks(il2cpp_binding &bindingCtx) {
 	//Hook when we hit a target, so we know what high score to look for
 	bindingCtx.bindClassFunction("", "Target", "CompleteTarget", InvokeTime::Before, [](const MethodInvocationContext& ctx, ThisPtr ths) -> void {
 		nextPopupIsScore = true;
@@ -149,7 +148,7 @@ extern "C" __declspec(dllexport) void registerHooks(il2cpp_binding &bindingCtx) 
 				{ "color", "00FF4E" },
 			},
 			{
-				{ "cutoff", 0.9 },
+				{ "cutoff", 0.95 },
 				{ "color", "00FFDE" },
 			},
 			{
@@ -177,4 +176,9 @@ extern "C" __declspec(dllexport) void registerHooks(il2cpp_binding &bindingCtx) 
 	std::sort(colors.begin(), colors.end(), [](const std::pair<float, Color> &lhs, const std::pair<float, Color> &rhs) {
 		return lhs.first < rhs.first;
 	});
+
+	ModDeclaration decl;
+	decl.bindingVersion = semver{ 1, 0 ,0 };
+	decl.modName = "Hit Score Visualizer";
+	return decl;
 }
