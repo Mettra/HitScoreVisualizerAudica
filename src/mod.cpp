@@ -97,7 +97,7 @@ extern "C" __declspec(dllexport) ModDeclaration registerHooks(il2cpp_binding &bi
 			auto popup = il2cppapi::Object(popups[idx], gtx.getClass("", "TextPopup"));
 			auto textMesh = il2cppapi::Object(popup.field<internal::Il2CppObject>("text").get(), gtx.getClass("TMPro", "TextMeshPro"));
 
-			std::optional<Color> foundColor;
+			Color foundColor = Color(0xffffff); //Default to white
 
 			for (auto &&p : colors) {
 				if (scorePercent <= p.first) {
@@ -106,30 +106,7 @@ extern "C" __declspec(dllexport) ModDeclaration registerHooks(il2cpp_binding &bi
 				}
 			}
 
-			if (!foundColor) {
-				return;
-			}
-
-			uint32_t color = 0;
-
-			// < 40%, color red
-			if (scorePercent < 0.4f) {
-				color = 0xff0000;
-			}
-			//40% - 70% green
-			else if (scorePercent >= 0.4f && scorePercent < 0.7f) {
-				color = 0x00FF4E;
-			}
-			//70% - 90% cyan
-			else if (scorePercent >= 0.7f && scorePercent < 0.9f) {
-				color = 0x00FFDE;
-			}
-			//90% - 100% gold
-			else if (scorePercent >= 0.9f && scorePercent <= 1.0f) {
-				color = 0xFFD800;
-			}
-
-			textMesh.method<void(Color)>("SetFaceColor")(textMesh, foundColor.value());
+			textMesh.method<void(Color)>("SetFaceColor")(textMesh, foundColor);
 		}
 	});
 
