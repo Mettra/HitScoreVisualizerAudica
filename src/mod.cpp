@@ -170,9 +170,4 @@ extern "C" __declspec(dllexport) void registerHooks(il2cpp_binding &bindingCtx) 
 	std::sort(colors.begin(), colors.end(), [](const std::pair<float, Color> &lhs, const std::pair<float, Color> &rhs) {
 		return lhs.first < rhs.first;
 	});
-
-	ModDeclaration decl;
-	decl.bindingVersion = semver{ 1, 0 ,0 };
-	decl.modName = "Hit Score Visualizer";
-	return decl;
 }
