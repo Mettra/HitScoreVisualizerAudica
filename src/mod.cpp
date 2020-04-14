@@ -19,6 +19,7 @@ struct Quat {
 
 bool nextPopupIsScore = false;
 uint32_t nextMaxScore = 1;
+uint32_t nextMaxScoreSub = 0;
 
 struct Color {
 	Color(uint32_t hexValue) {
@@ -35,7 +36,14 @@ struct Color {
 
 std::vector<std::pair<float, Color>> colors;
 
-extern "C" __declspec(dllexport) ModDeclaration registerHooks(il2cpp_binding &bindingCtx) {
+extern "C" __declspec(dllexport) ModDeclaration getModInfo() {
+	ModDeclaration decl;
+	decl.bindingVersion = BindingVersion;
+	decl.modName = "Hit Score Visualizer";
+	return decl;
+}
+
+extern "C" __declspec(dllexport) void registerHooks(il2cpp_binding &bindingCtx) {
 	//Hook when we hit a target, so we know what high score to look for
 	bindingCtx.bindClassFunction("", "Target", "CompleteTarget", InvokeTime::Before, [](const MethodInvocationContext& ctx, ThisPtr ths) -> void {
 		nextPopupIsScore = true;
@@ -44,11 +52,14 @@ extern "C" __declspec(dllexport) ModDeclaration registerHooks(il2cpp_binding &bi
 		auto cue = targetClass->field<internal::Il2CppObject>(ths, "mCue");
 		int32_t behavior = cue.getClass()->field<int32_t>(cue, "behavior");
 
+		nextMaxScoreSub = 0;
+	
 		if (behavior == 0 || behavior == 1 || behavior == 2 || behavior == 4) {
 			nextMaxScore = 2000;
 		}
 		else if (behavior == 3) {
-			nextMaxScore = 3000;
+			nextMaxScore = 2000;
+			nextMaxScoreSub = 1000;
 		}
 		else if (behavior == 5) {
 			nextMaxScore = 125;
@@ -72,6 +83,7 @@ extern "C" __declspec(dllexport) ModDeclaration registerHooks(il2cpp_binding &bi
 			if (nextMaxScore == 0 || !text || gtx.getStringLength(text) <= 0) {
 				return;
 			}
+			
 				auto textChars = gtx.getStringChars(text);
 				
 			std::vector<char> scoreChar;
@@ -85,9 +97,14 @@ extern "C" __declspec(dllexport) ModDeclaration registerHooks(il2cpp_binding &bi
 				return;
 			}
 
+			score -= nextMaxScoreSub;
+
 			float scorePercent = score / (float)nextMaxScore;
-			if (scorePercent < 0 || scorePercent > 1) {
-				return;
+			if (scorePercent < 0) {
+				scorePercent = 0;
+			}
+			else if (scorePercent > 1) {
+				scorePercent = 1;
 			}
 
 			auto idx = ths.field<int32_t>("mIndex").get();
