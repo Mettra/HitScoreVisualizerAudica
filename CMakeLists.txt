@@ -9,7 +9,6 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 add_library(${ModName} SHARED 
     ${CMAKE_CURRENT_SOURCE_DIR}/src/mod.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/shared/il2cpp/il2cpp_context.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/shared/il2cpp/il2cpp_binding.cpp
 )
 
 include(GenerateExportHeader)
